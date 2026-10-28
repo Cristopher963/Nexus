@@ -3,15 +3,18 @@ import { useState } from 'react';
 import { Apps } from './Apps';
 import { Games } from './Games';
 
+
 export type ActivePage = 'home' | 'apps' | 'games';
 
 export function App() {
   const [currentPage, setCurrentPage] = useState<ActivePage>('home');
+  
 
   const handleNavigation = (page: ActivePage) => {
     setCurrentPage(page);
   };
 
+  
   return (
     <main className="generalContainer">
       <div className="pageContainer">

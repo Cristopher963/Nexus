@@ -1,18 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { invoke } from "@tauri-apps/api/core";
 
 interface GamesProps {
   onNavigate: (page: 'apps' | 'home') => void;
 }
 
 export const Games: React.FC<GamesProps> = ({ onNavigate }) => {
+  const [juegos, setJuegos] = useState<string[]>([]);
+  
+  async function callGames() {
+    const games = await invoke<string[]>("lista_juegos");
+    setJuegos(games);
+  }
+
   return (
-    <main className="Container-Games">
+    <section className="Container-Games">
         <div className="header">
-            <button onClick={() => onNavigate('apps')}>
-                Ir a Apps
+            <button className='Volver-Inicio' onClick={() => onNavigate('home')}>
+                ← Volver a Inicio
             </button>
-            <button onClick={() => onNavigate('home')}>
-                Volver a Inicio
+            <button className='Ir-a-Apps' onClick={() => onNavigate('apps')}>
+                Ir a Apps →
             </button>
         </div>
         <h1>Pantalla de Juegos</h1>
@@ -20,7 +28,7 @@ export const Games: React.FC<GamesProps> = ({ onNavigate }) => {
         <div className="optionButtons">
             {/*aquí van a estar los botones de las diferentes plataformas*/}
             {/*Por defecto muestra los juegos del escritorio*/}
-            <button>En el Escritorio</button>
+            <button onClick={callGames}>En el Escritorio</button>
             <button>Steam</button>
             <button>Epic Games</button>
             {/*aquí tu puedes marcar un juego como favorito*/}
@@ -30,7 +38,12 @@ export const Games: React.FC<GamesProps> = ({ onNavigate }) => {
             {/*aquí va a estar la lista de juegos*/}
             <p>Lista de juegos.</p>
         </div>
-    </main>
+        <ul>
+            {juegos.map((game)=>(
+                <li key={game}>{game}</li>
+            ))}
+        </ul>
+    </section>
   );
 }
 
